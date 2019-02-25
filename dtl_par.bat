@@ -1,0 +1,1 @@
+"C:\EBpro\EasyConverter.exe" /c8 /t0 "E:\js\node\server\bigdata\dtl\%~1.dtl" "E:\js\node\server\bigdata\csv\%~1.csv"

@@ -1,0 +1,7 @@
+20190110.csv
+bigdata/csv/**
+bigdata/dtl/**
+bigdata/html/**
+connection.js
+data/**
+testscripts/**
