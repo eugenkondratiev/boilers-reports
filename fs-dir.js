@@ -30,7 +30,7 @@ function getDtl(path, last ,  callback){
 }
 
 
-const dtlFiles = getDtl(DTL_PATH, 2, function(dtls){
+const dtlFiles = getDtl(DTL_PATH, 5, function(dtls){
 		console.log(dtls);//has array of .dtl. ready to  .csv convertion
 //"C:\EBpro\EasyConverter.exe" /c8 /t0 "D:\JS\nodejs\server\%~1.dtl" "D:\JS\nodejs\server\%~1.csv"
 		
