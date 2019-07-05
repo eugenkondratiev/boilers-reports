@@ -5,3 +5,6 @@ bigdata/html/**
 connection.js
 data/**
 testscripts/**
+bigdata
+testscripts
+data
