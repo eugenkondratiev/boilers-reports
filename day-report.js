@@ -13,6 +13,8 @@ const dtUtils = require('./node-modules/date-utils');
 const headers = require('./node-modules/string-templates');
 const  getHtmlFile = require('./node-modules/html-templates');
 
+const getHoursList = require('./hours-list');
+
 //==============================================================================
 const reportDay =  parseInt(process.argv[2]) || 18;
 const reportMonth =  parseInt(process.argv[3]) || 2;
@@ -30,12 +32,13 @@ con.connect(function(err) {
     //throw err;
     } else {
         console.log("Connected!  BD state = "+ con.state);
-        getHoursList(reportDay, reportMonth, reportYear)
+        getHoursList(con, reportDay, reportMonth, reportYear)
+        // getHoursList(reportDay, reportMonth, reportYear)
         .then(function(result) {
             ;
              try {
                 hoursArray = result.map(function(row, i, arr) {
-                     return formHourRow(row);
+                     return headers.formHourRow(row);
                 });                               
             } catch (e) {
                 console.log(e.message);
@@ -61,11 +64,13 @@ con.on('error', function(err) {
     console.log(" err BD state = "+ con.state);
 });
 //==============================================================================
-let sequence = Promise.resolve();
-const allData =[];
-let htmlArr = [];
+//let sequence = Promise.resolve();
+//const allData =[];
+
 //==============================================================================
 //===============================================================================
+let htmlArr = [];
+
 function forEachHour(arr){
     try {       
         if (arr.length < 1) {
@@ -73,8 +78,6 @@ function forEachHour(arr){
             con.end();
             return;
         } 
-            arr.forEach(function(hour, i , arr) { 
-                if (i === arr.length - 1) { 
                     con.end();
                     htmlArr = headers.getTableHeader() + dtUtils.arrToTableRow(arr)
                     const htmlFile = getHtmlFile(htmlArr, reportDay, reportMonth, reportYear);
@@ -82,8 +85,18 @@ function forEachHour(arr){
                     fs.writeFile(reportFile, htmlFile, function(){
                         console.log( "Сохранено в  " + reportFile);
                     });
-                }
-            });    
+
+            // arr.forEach(function(hour, i , arr) { 
+            //     if (i === arr.length - 1) { 
+            //         con.end();
+            //         htmlArr = headers.getTableHeader() + dtUtils.arrToTableRow(arr)
+            //         const htmlFile = getHtmlFile(htmlArr, reportDay, reportMonth, reportYear);
+            //         const reportFile = HTML_PATH +  reportYear  + "-"  + dtUtils.getNiceMonth(reportMonth) + "-"  + dtUtils.getNiceday(reportDay) + ".html";
+            //         fs.writeFile(reportFile, htmlFile, function(){
+            //             console.log( "Сохранено в  " + reportFile);
+            //         });
+            //     }
+            // });    
     } catch (e) {
         console.log(e.message); 
     } finally {
@@ -91,59 +104,60 @@ function forEachHour(arr){
     }
 }
 //==============================================================================
-function getHoursList(dd = 20, mm = 1, year = 2019){
-    return new Promise( function(resolve, reject){
-        function performQuery(dd, mm , year){
-            const sql = dtUtils.dayReportSql(dd, mm , year);
-            console.log("sql = ", sql);
+// function getHoursList(dd = 20, mm = 1, year = 2019){
+//     return new Promise( function(resolve, reject){
+//         function performQuery(dd, mm , year){
+//             const sql = dtUtils.dayReportSql(dd, mm , year);
+//             console.log("sql = ", sql);
             
-            let query = con.query(sql,  [], function (err, result, fields) {
-                if (err) {
-                    console.log(err.message);
-                    reject(err);
-                } else {
-                     resolve(result);
-                }
-            });
-        };
-        if (con.state === 'disconnected'){
-            con.connect(function(err) {
-                try {
-                    if (err){
-                        console.log('BD connect error: ' + err.message);
-                        con.end();
-                        //throw err;
-                        } else {
-                            performQuery(dd, mm, year);
-                        console.log("RE-Connected! BD state = "+ con.state);
-                        }                                            
-                } catch (e) {
-                    console.log("SQL access problem : " + e.message );
-                    //con.end();
-                }
-            });
-        } else {
-            try {               
-            performQuery(dd, mm, year);
-            } catch(e) {
-                console.log("SQL access problem : " + e.message );
-            } finally {
-                ;
-            }
-        };
-    });
-}
-//==============================================================================
-function formHourRow(row) {
-    const hourRow = [];
-    for (const prop in row) {
-        if (row.hasOwnProperty(prop)) {
-           if (prop !== "id") {
-               prop == "dt" ? hourRow.push( dtUtils.getDateTimeFromMySql(row[prop]) ) : hourRow.push(row[prop].toFixed(3));
-            };            
-        }
-    }
-    return hourRow;  
-};
-//==============================================================================
+//             let query = con.query(sql,  [], function (err, result, fields) {
+//                 if (err) {
+//                     console.log(err.message);
+//                     reject(err);
+//                 } else {
+//                      resolve(result);
+//                 }
+//             });
+//         };
+
+//         if (con.state === 'disconnected'){
+//             con.connect(function(err) {
+//                 try {
+//                     if (err){
+//                         console.log('BD connect error: ' + err.message);
+//                         con.end();
+//                         //throw err;
+//                         } else {
+//                             performQuery(dd, mm, year);
+//                         console.log("RE-Connected! BD state = "+ con.state);
+//                         }                                            
+//                 } catch (e) {
+//                     console.log("SQL access problem : " + e.message );
+//                     //con.end();
+//                 }
+//             });
+//         } else {
+//             try {               
+//             performQuery(dd, mm, year);
+//             } catch(e) {
+//                 console.log("SQL access problem : " + e.message );
+//             } finally {
+//                 ;
+//             }
+//         };
+//     });
+// }
+// //==============================================================================
+// function formHourRow(row) {
+//     const hourRow = [];
+//     for (const prop in row) {
+//         if (row.hasOwnProperty(prop)) {
+//            if (prop !== "id") {
+//                prop == "dt" ? hourRow.push( dtUtils.getDateTimeFromMySql(row[prop]) ) : hourRow.push(row[prop].toFixed(3));
+//             };            
+//         }
+//     }
+//     return hourRow;  
+// };
+// //==============================================================================
 //===============================================================================

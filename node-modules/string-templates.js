@@ -1,3 +1,4 @@
+const dtUtils = require('./date-utils');
 
 //========================================================================================
 const HEADER = ["Дата", "Тепло, Гкал", "Расход воды, м3", "Темп. на город, С", "Темп. оборотной, С",  "Давление после котла, МПа", "Давление до котла, МПа", "Темп. дымовых до ЭКО, С", "Разрежение в топке, Па" ];
@@ -6,6 +7,21 @@ function tableHeader() {
     return HEADER.map(el => "<th>" + el + "</th>").join("");
 }
 
+//==============================================================================
+function formHourRow(row) {
+    const hourRow = [];
+    for (const prop in row) {
+        if (row.hasOwnProperty(prop)) {
+           if (prop !== "id") {
+               prop == "dt" ? hourRow.push( dtUtils.getDateTimeFromMySql(row[prop]) ) : hourRow.push(row[prop].toFixed(3));
+            };            
+        }
+    }
+    return hourRow;  
+};
+//==============================================================================
+
 module.exports = {
-    getTableHeader: tableHeader
+    getTableHeader: tableHeader,
+    formHourRow : formHourRow
 };
