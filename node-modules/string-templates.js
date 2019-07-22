@@ -24,7 +24,26 @@ function formHourRow(row) {
 };
 //==============================================================================
 
+function dressUpDayRow(result) {
+    const queryFields = Object.values(result[0]);
+    let queryDays =[];
+                       queryFields.map((el, index) => {
+                        queryDays.push(el.toString().match(/[TZ]/) ? dtUtils.getDateTimeFromMySql(el).slice(0, 10) : parseFloat(el).toFixed(3));
+                       });
+    return queryDays;
+}
+//==============================================================================
+//==============================================================================
+function arrToTableRow(arr) {
+    const row = arr.map( record => {
+        return "<tr>" + record.map(el => "<td>" + el + "</td>").join('')  + "</tr>";
+    });
+   return row.join('');
+}
+//==============================================================================
 module.exports = {
     getTableHeader: tableHeader,
-    formHourRow : formHourRow
+    arrToTableRow : arrToTableRow,
+    formHourRow : formHourRow,
+    dressUpDayRow : dressUpDayRow
 };

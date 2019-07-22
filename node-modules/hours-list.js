@@ -1,4 +1,4 @@
-const dtUtils = require('./node-modules/date-utils');
+const dtUtils = require('./date-utils');
 //==============================================================================
 function getHoursList(_con, dd = 20, mm = 1, year = 2019){
     return new Promise( function(resolve, reject){
