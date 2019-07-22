@@ -4,10 +4,7 @@ module.exports = getHtmlFile;
 
 //==============================================================================
 //===============================================================================
-function getHtmlFile(htmlArr, reportDay = 20, reportMonth = 1, reportYear = 2019, eco = 1, type = 1) {
-    const title = type === 2 // month report;
-                    ? `Oтчет за ${dtUtils.monthName(reportMonth)} ${reportYear}`
-                    : `Oтчет за ${reportDay} ${dtUtils.monthString(reportMonth)} ${reportYear}`;
+function getHtmlFile(htmlArr, reportDay = 20, reportMonth = 1, reportYear = 2019) {
 
     const htmlStart =`<!DOCTYPE html>
     <html lang="en">
@@ -15,7 +12,7 @@ function getHtmlFile(htmlArr, reportDay = 20, reportMonth = 1, reportYear = 2019
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>${title}</title>
+        <title>Oтчет за ${reportDay} ${dtUtils.monthString(reportMonth)} ${reportYear}</title>
         <link rel="stylesheet" href="css/mainsheet.css">
         <style>
         #monthTable {
@@ -56,7 +53,7 @@ function getHtmlFile(htmlArr, reportDay = 20, reportMonth = 1, reportYear = 2019
         </style>
       
     </head>
-    <h1>${title}</h1>
+    <h1>Oтчет за ${reportDay} ${dtUtils.monthString(reportMonth)} ${reportYear}</h1>
     <body><div style="height:10px"></div><div id="reportDiv"><table id="monthTable">`;
     
     const htmlEnd = `
