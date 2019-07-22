@@ -11,24 +11,24 @@
 
 
 
-function getDayReport(_con, reportDay = 15, reportMonth = 7, reportYear = 2019) {
+function getDayReport(reportDay = 15, reportMonth = 7, reportYear = 2019) {
      //==============================================================================
     // const reportDay =  parseInt(process.argv[2]) || 18;
     // const reportMonth =  parseInt(process.argv[3]) || 2;
     // const reportYear = parseInt(process.argv[4])|| 2019 ;
-    return new Promise(function(resolve, reject) {
+
     let hoursArray =[];
     //let daysInMonth  = 30;
     //==============================================================================
     //===============================================================================
-    _con.connect(function(err) {
+    con.connect(function(err) {
         if (err){
         console.log(' con.connect BD connect error: ' + err.message);
         console.log(" err BD state = "+ con.state);
-        _con.end();
+        con.end();
         //throw err;
         } else {
-            console.log("Connected!  BD state = "+ _con.state);
+            console.log("Connected!  BD state = "+ con.state);
             getHoursList(con, reportDay, reportMonth, reportYear)
             // getHoursList(reportDay, reportMonth, reportYear)
             .then(function(result) {
@@ -51,35 +51,17 @@ function getDayReport(_con, reportDay = 15, reportMonth = 7, reportYear = 2019) 
             })
             .finally( function(result) {
                 //forEachHour(hoursArray);
-                try {   
-                    _con.end();    
-                            if (hoursArray.length < 1) {
-                                console.log("\nДанные за этот период отсутствуют или ошибочны");
-                                reject("\nДанные за этот период отсутствуют или ошибочны");
-                                // return "\nДанные за этот период отсутствуют или ошибочны";
-                            } else {
-
-                                resolve(dtUtils.arrToTableRow(hoursArray));
-                                // return dtUtils.arrToTableRow(hoursArray);
-                            }
-                        } catch (e) {
-                                    console.log(e.message); 
-                                    reject(e.message)
-                        } finally {
-                                    ;
-                        }
+                return dtUtils.arrToTableRow(hoursArray);
             }
 
             );
         }   
     });
 
-    _con.on('error', function(err) {
+    con.on('error', function(err) {
         console.log('con.on BD error: ' + err.message);
         console.log(" err BD state = "+ con.state);
-        reject('con.on BD error: ' + err.message)
     });
-    {
     //==============================================================================
     //let sequence = Promise.resolve();
     //const allData =[];
@@ -178,19 +160,9 @@ function getDayReport(_con, reportDay = 15, reportMonth = 7, reportYear = 2019) 
     // };
     // //==============================================================================
     //===============================================================================
-    }
-});
+
 }
 
 
-getDayReport(con, 15, 7, 2019).then((result) => {
-    console.log("result table: \n" , result);
-    
-})
-.catch((err) => {
-    console.log(err)
-});
-
-
-
+console.log(getDayReport(15, 7, 2019));
 

@@ -29,11 +29,9 @@ function getNiceday(day) {
     return day > 9 ? "" + day : "0" + day;
 }
 //==============================================================================
-function dayReportSql(day, month , year, eco = 1) {
+function dayReportSql(day, month , year) {
     const startDay = formDayStr(day, month , year);
-    return eco == 2 
-    ? /**change for eco2 */  `SELECT dt, w_38, q_39, T_41, T_42, P_19, P_18, T_10, P_36  FROM eco2.hr3 where dt between '${startDay}' and DATE_ADD('${startDay}', INTERVAL 23 hour)`
-    :   `SELECT dt, w_38, q_39, T_41, T_42, P_19, P_18, T_10, P_36  FROM eco2.hr3 where dt between '${startDay}' and DATE_ADD('${startDay}', INTERVAL 23 hour)`;
+    return `SELECT dt, w_38, q_39, T_41, T_42, P_19, P_18, T_10, P_36  FROM eco2.hr3 where dt between '${startDay}' and DATE_ADD('${startDay}', INTERVAL 23 hour)`;
 }
 //========================================================================================
 function formDayStr(day = 20, month = 1, fullyear = 2019) {
